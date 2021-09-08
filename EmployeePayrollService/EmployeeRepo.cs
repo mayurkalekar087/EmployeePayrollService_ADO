@@ -67,5 +67,44 @@ namespace EmployeePayrollService
             }
 
         }
+        public bool AddEmployee(EmployeePayroll model)
+        {
+            try
+            {
+                using (this.connection)
+                {
+                    SqlCommand command = new SqlCommand("employee_payroll", this.connection);
+                    command.CommandType = System.Data.CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@name", model.name);
+                    command.Parameters.AddWithValue("@phone", model.phone);
+                    command.Parameters.AddWithValue("@address", model.address);
+                    command.Parameters.AddWithValue("@Department", model.Department);
+                    command.Parameters.AddWithValue("@Gender", model.Gender);
+                    command.Parameters.AddWithValue("@basic_pay", model.basic_pay);
+                    command.Parameters.AddWithValue("@deductions", model.deductions);
+                    command.Parameters.AddWithValue("@taxable_pay", model.taxable_pay);
+                    command.Parameters.AddWithValue("@tax", model.tax);
+                    command.Parameters.AddWithValue("@net_pay", model.net_pay);
+                    command.Parameters.AddWithValue("@Start", DateTime.Now);
+                    this.connection.Open();
+                    var result = command.ExecuteNonQuery();
+                    this.connection.Close();
+                    if (result != 0)
+                    {
+                        return true;
+                    }
+                    return false;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            finally
+            {
+                this.connection.Close();
+            }
+            return false;
+        }
     }
 }
